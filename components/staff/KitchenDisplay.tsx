@@ -1,18 +1,17 @@
 "use client"
 
-import { Button } from "../ui/Button"
-import { Badge } from "../ui/Badge"
-import { useTranslation } from "../../hooks/useTranslation"
-import type { Order, Language } from "../../types"
+import { Button } from "../ui/button"
+import { Badge } from "../ui/badge"
+import { useLanguage } from "../../hooks/use-language"
+import type { Order } from "../../types"
 
 interface KitchenDisplayProps {
   orders: Order[]
-  language: Language
   onUpdateOrderStatus: (orderId: string, status: Order["status"]) => void
 }
 
-export function KitchenDisplay({ orders, language, onUpdateOrderStatus }: KitchenDisplayProps) {
-  const { t } = useTranslation(language)
+export function KitchenDisplay({ orders, onUpdateOrderStatus }: KitchenDisplayProps) {
+  const { t } = useLanguage()
 
   const activeOrders = orders
     .filter((order) => order.status === "received" || order.status === "in_kitchen")
@@ -58,11 +57,11 @@ export function KitchenDisplay({ orders, language, onUpdateOrderStatus }: Kitche
                       <p className="text-lg text-gray-600 dark:text-gray-400">{elapsedMinutes}m ago</p>
                     </div>
                     <div className="text-right">
-                      <Badge variant={order.status === "in_kitchen" ? "warning" : "info"} className="text-lg px-3 py-1">
+                      <Badge variant={order.status === "in_kitchen" ? "secondary" : "default"} className="text-lg px-3 py-1">
                         {order.status === "received" ? "NEW" : "COOKING"}
                       </Badge>
                       {isUrgent && (
-                        <Badge variant="danger" className="block mt-1">
+                        <Badge variant="destructive" className="block mt-1">
                           URGENT
                         </Badge>
                       )}

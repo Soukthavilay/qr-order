@@ -1,18 +1,17 @@
 "use client"
 
 import { useMemo } from "react"
-import { Badge } from "../ui/Badge"
-import { useTranslation } from "../../hooks/useTranslation"
-import type { Order, Review, Language } from "../../types"
+import { Badge } from "../ui/badge"
+import { useLanguage } from "../../hooks/use-language"
+import type { Order, Review } from "../../types"
 
 interface AnalyticsDashboardProps {
   orders: Order[]
   reviews: Review[]
-  language: Language
 }
 
-export function AnalyticsDashboard({ orders, reviews, language }: AnalyticsDashboardProps) {
-  const { t } = useTranslation(language)
+export function AnalyticsDashboard({ orders, reviews }: AnalyticsDashboardProps) {
+  const { t } = useLanguage()
 
   const analytics = useMemo(() => {
     const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0)
@@ -113,7 +112,7 @@ export function AnalyticsDashboard({ orders, reviews, language }: AnalyticsDashb
                   <span className="text-lg font-bold text-gray-400 w-6">#{index + 1}</span>
                   <span className="ml-3 text-gray-900 dark:text-white">{item.name}</span>
                 </div>
-                <Badge variant="info">{item.count} sold</Badge>
+                <Badge variant="secondary">{item.count} sold</Badge>
               </div>
             ))}
           </div>

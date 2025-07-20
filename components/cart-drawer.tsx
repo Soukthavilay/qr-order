@@ -12,6 +12,7 @@ interface CartDrawerProps {
   onRemoveFromCart: (id: number) => void
   totalPrice: number
   onClearCart: () => void
+  onPlaceOrder: () => void
 }
 
 export function CartDrawer({
@@ -22,13 +23,12 @@ export function CartDrawer({
   onRemoveFromCart,
   totalPrice,
   onClearCart,
+  onPlaceOrder,
 }: CartDrawerProps) {
   const formatPrice = (price: number) => `₭${price.toLocaleString()}`
 
   const handlePlaceOrder = () => {
-    alert("Order placed successfully! 🎉")
-    onClearCart()
-    onClose()
+    onPlaceOrder()
   }
 
   if (!isOpen) return null
@@ -70,7 +70,7 @@ export function CartDrawer({
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => onRemoveFromCart(item.id)}
+                          onClick={() => onRemoveFromCart(Number(item.id))}
                           className="text-red-500 hover:text-red-700 p-1"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -82,7 +82,7 @@ export function CartDrawer({
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                            onClick={() => onUpdateQuantity(Number(item.id), item.quantity - 1)}
                             className="h-8 w-8 p-0"
                           >
                             <Minus className="h-3 w-3" />
@@ -91,7 +91,7 @@ export function CartDrawer({
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                            onClick={() => onUpdateQuantity(Number(item.id), item.quantity + 1)}
                             className="h-8 w-8 p-0"
                           >
                             <Plus className="h-3 w-3" />

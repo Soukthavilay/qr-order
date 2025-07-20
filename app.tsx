@@ -12,16 +12,38 @@ import { OrderTracking } from "./components/order-tracking"
 import { LanguageSelector } from "./components/language-selector"
 import { LoginPage } from "./components/admin/LoginPage"
 import { PosPage } from "./components/staff/PosPage"
+import { AnalyticsDashboard } from "./components/admin/AnalyticsDashboard"
+import { KitchenDisplay } from "./components/staff/KitchenDisplay"
+import { CartPage } from "./components/customer/CartPage"
 import { LanguageProvider, useLanguage } from "./hooks/use-language"
 import { useCart } from "./hooks/use-cart"
-import type { User } from "./types"
+import type { User, CartItem } from "./types"
 
-type Page = "menu" | "dashboard" | "integrations" | "inventory" | "reservations" | "reviews" | "tracking" | "login" | "pos"
+// Import Order type from types
+import type { Order } from "./types"
+
+type Page = "menu" | "dashboard" | "analytics" | "integrations" | "inventory" | "reservations" | "reviews" | "tracking" | "login" | "pos" | "kitchen" | "cart"
 
 function RestaurantAppContent() {
   const [currentPage, setCurrentPage] = useState<Page>("menu")
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [user, setUser] = useState<User | null>(null)
+  const [orders, setOrders] = useState<Order[]>([
+    {
+      id: "order-1",
+      tableNumber: "3",
+      items: [
+        { id: "1", name: "Pad Thai", price: 45000, image: "", description: "", category: "", available: true, popular: true, stock: 0, dietaryTags: [], translations: {}, quantity: 2 },
+        { id: "2", name: "Tom Yum Soup", price: 35000, image: "", description: "", category: "", available: true, popular: true, stock: 0, dietaryTags: [], translations: {}, quantity: 1 }
+      ],
+      total: 125000,
+      status: "received",
+      timestamp: new Date().toISOString(),
+      customerName: "Table 3",
+      estimatedTime: 20
+    }
+  ])
+  const [tableNumber, setTableNumber] = useState<string>("1")
   const { cartItems, addToCart, updateQuantity, removeFromCart, getTotalItems, getTotalPrice, clearCart } = useCart()
   const { t } = useLanguage()
 
@@ -46,7 +68,7 @@ function RestaurantAppContent() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1) as Page
-      if (["dashboard", "integrations", "inventory", "reservations", "reviews", "tracking", "login", "pos"].includes(hash)) {
+      if (["dashboard", "analytics", "integrations", "inventory", "reservations", "reviews", "tracking", "login", "pos", "kitchen", "cart"].includes(hash)) {
         setCurrentPage(hash)
       } else {
         setCurrentPage("menu")
@@ -73,9 +95,38 @@ function RestaurantAppContent() {
     navigateTo("menu")
   }
 
+  const handlePlaceOrder = () => {
+    if (cartItems.length === 0) {
+      alert("Your cart is empty!")
+      return
+    }
+
+    const newOrder: Order = {
+      id: `order-${Date.now()}`,
+      tableNumber: tableNumber,
+      items: cartItems,
+      total: getTotalPrice(),
+      status: "received",
+      timestamp: new Date().toISOString(),
+      customerName: `Table ${tableNumber}`,
+      estimatedTime: 20
+    }
+
+    setOrders(prev => [newOrder, ...prev])
+    clearCart()
+    setIsCartOpen(false)
+    alert(`Order placed successfully! 🎉\nOrder ID: ${newOrder.id}\nTable: ${newOrder.tableNumber}`)
+  }
+
+  const handleUpdateOrderStatus = (orderId: string, newStatus: Order["status"]) => {
+    setOrders(prev => prev.map(order => 
+      order.id === orderId ? { ...order, status: newStatus } : order
+    ))
+  }
+
   const renderCurrentPage = () => {
     // Check if user needs to be logged in for admin pages
-    const adminPages = ["dashboard", "integrations", "inventory", "pos"]
+    const adminPages = ["dashboard", "analytics", "integrations", "inventory", "pos", "kitchen"]
     if (adminPages.includes(currentPage) && !user) {
       return <LoginPage language="en" onLogin={handleLogin} />
     }
@@ -92,6 +143,8 @@ function RestaurantAppContent() {
         )
       case "dashboard":
         return <AdminDashboard />
+      case "analytics":
+        return <AnalyticsDashboard orders={orders} reviews={[]} />
       case "integrations":
         return <IntegrationPanel />
       case "inventory":
@@ -104,6 +157,21 @@ function RestaurantAppContent() {
         return <OrderTracking />
       case "pos":
         return <PosPage />
+      case "kitchen":
+        return <KitchenDisplay orders={orders} onUpdateOrderStatus={handleUpdateOrderStatus} />
+      case "cart":
+        return (
+          <CartPage
+            cartItems={cartItems}
+            onUpdateQuantity={(id, quantity) => updateQuantity(Number(id), quantity)}
+            onRemoveItem={(id) => removeFromCart(Number(id))}
+            onPlaceOrder={() => {
+              alert("Order placed successfully! 🎉")
+              clearCart()
+            }}
+            onClearCart={clearCart}
+          />
+        )
       case "login":
         return <LoginPage language="en" onLogin={handleLogin} />
       default:
@@ -126,11 +194,24 @@ function RestaurantAppContent() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <h1 className="text-xl font-bold text-gray-900">🍜 Nom Nom Cafe</h1>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">Table:</span>
+                <input
+                  type="number"
+                  value={tableNumber}
+                  onChange={(e) => setTableNumber(e.target.value)}
+                  className="w-16 px-2 py-1 text-sm border border-gray-300 rounded"
+                  min="1"
+                />
+              </div>
               <div className="hidden lg:flex gap-2">
                 {[
                   { key: "menu", label: t("menu") },
                   { key: "dashboard", label: t("dashboard") },
+                  { key: "analytics", label: t("analytics") },
                   { key: "pos", label: t("pos") },
+                  { key: "kitchen", label: t("kitchen") },
+                  { key: "cart", label: t("cart") },
                   { key: "tracking", label: t("tracking") },
                   { key: "reservations", label: t("reservations") },
                   { key: "reviews", label: t("reviews") },
@@ -186,6 +267,7 @@ function RestaurantAppContent() {
         onRemoveFromCart={removeFromCart}
         totalPrice={getTotalPrice()}
         onClearCart={clearCart}
+        onPlaceOrder={handlePlaceOrder}
       />
 
       {/* Mobile Navigation */}

@@ -1,20 +1,19 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { Badge } from "../ui/Badge"
-import { useTranslation } from "../../hooks/useTranslation"
-import type { InventoryItem, Language } from "../../types"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { Badge } from "../ui/badge"
+import { useLanguage } from "../../hooks/use-language"
+import type { InventoryItem } from "../../types"
 
 interface InventoryManagementProps {
   inventory: InventoryItem[]
-  language: Language
   onUpdateStock: (itemId: string, stock: number) => void
 }
 
-export function InventoryManagement({ inventory, language, onUpdateStock }: InventoryManagementProps) {
-  const { t } = useTranslation(language)
+export function InventoryManagement({ inventory, onUpdateStock }: InventoryManagementProps) {
+  const { t } = useLanguage()
   const [editingItem, setEditingItem] = useState<string | null>(null)
   const [newStock, setNewStock] = useState<number>(0)
 
@@ -46,7 +45,7 @@ export function InventoryManagement({ inventory, language, onUpdateStock }: Inve
           <h2 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">⚠️ Low Stock Alert</h2>
           <div className="flex flex-wrap gap-2">
             {lowStockItems.map((item) => (
-              <Badge key={item.id} variant="danger">
+              <Badge key={item.id} variant="destructive">
                 {item.name} ({item.currentStock} {item.unit})
               </Badge>
             ))}
@@ -116,7 +115,7 @@ export function InventoryManagement({ inventory, language, onUpdateStock }: Inve
                       {item.minStock} {item.unit}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <Badge variant={isLowStock ? "danger" : "success"}>{isLowStock ? "Low Stock" : "In Stock"}</Badge>
+                      <Badge variant={isLowStock ? "destructive" : "default"}>{isLowStock ? "Low Stock" : "In Stock"}</Badge>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       {isEditing ? (

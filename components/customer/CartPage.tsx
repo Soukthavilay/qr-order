@@ -1,12 +1,11 @@
 "use client"
 
-import { Button } from "../ui/Button"
-import { useTranslation } from "../../hooks/useTranslation"
-import type { CartItem, Language } from "../../types"
+import { Button } from "../ui/button"
+import { useLanguage } from "../../hooks/use-language"
+import type { CartItem } from "../../types"
 
 interface CartPageProps {
   cartItems: CartItem[]
-  language: Language
   onUpdateQuantity: (id: string, quantity: number) => void
   onRemoveItem: (id: string) => void
   onPlaceOrder: () => void
@@ -15,18 +14,17 @@ interface CartPageProps {
 
 export function CartPage({
   cartItems,
-  language,
   onUpdateQuantity,
   onRemoveItem,
   onPlaceOrder,
   onClearCart,
 }: CartPageProps) {
-  const { t } = useTranslation(language)
+  const { t } = useLanguage()
 
   const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   const getItemName = (item: CartItem) => {
-    return item.translations[language]?.name || item.name
+    return item.name
   }
 
   if (cartItems.length === 0) {

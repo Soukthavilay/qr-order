@@ -1,16 +1,14 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { Badge } from "../ui/Badge"
-import { MenuItemSkeleton } from "../ui/LoadingSkeleton"
-import { useTranslation } from "../../hooks/useTranslation"
-import type { MenuItem, Language, DietaryTag } from "../../types"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { Badge } from "../ui/badge"
+import { useLanguage } from "../../hooks/use-language"
+import type { MenuItem, DietaryTag } from "../../types"
 
 interface MenuPageProps {
   menuItems: MenuItem[]
-  language: Language
   tableNumber?: string
   onAddToCart: (item: MenuItem) => void
   cartItemCount: number
@@ -20,14 +18,13 @@ interface MenuPageProps {
 
 export function MenuPage({
   menuItems,
-  language,
   tableNumber,
   onAddToCart,
   cartItemCount,
   onOpenCart,
   loading = false,
 }: MenuPageProps) {
-  const { t } = useTranslation(language)
+  const { t } = useLanguage()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [selectedDietaryTags, setSelectedDietaryTags] = useState<DietaryTag[]>([])

@@ -1,29 +1,27 @@
 "use client"
 
-import { Button } from "../ui/Button"
-import { Badge } from "../ui/Badge"
-import { OrderSkeleton } from "../ui/LoadingSkeleton"
-import { useTranslation } from "../../hooks/useTranslation"
-import type { Order, Language } from "../../types"
+import { Button } from "../ui/button"
+import { Badge } from "../ui/badge"
+import { useLanguage } from "../../hooks/use-language"
+import type { Order } from "../../types"
 
 interface OrderDashboardProps {
   orders: Order[]
-  language: Language
   onUpdateOrderStatus: (orderId: string, status: Order["status"]) => void
   loading?: boolean
 }
 
-export function OrderDashboard({ orders, language, onUpdateOrderStatus, loading = false }: OrderDashboardProps) {
-  const { t } = useTranslation(language)
+export function OrderDashboard({ orders, onUpdateOrderStatus, loading = false }: OrderDashboardProps) {
+  const { t } = useLanguage()
 
   const getStatusBadgeVariant = (status: Order["status"]) => {
     switch (status) {
       case "received":
-        return "info"
+        return "default"
       case "in_kitchen":
-        return "warning"
+        return "secondary"
       case "ready":
-        return "success"
+        return "outline"
       case "served":
         return "default"
       default:
@@ -60,7 +58,11 @@ export function OrderDashboard({ orders, language, onUpdateOrderStatus, loading 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
-            <OrderSkeleton key={i} />
+            <div key={i} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 animate-pulse">
+              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            </div>
           ))}
         </div>
       </div>
