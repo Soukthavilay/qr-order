@@ -10,22 +10,43 @@ import { ReservationSystem } from "./components/reservation-system"
 import { ReviewSystem } from "./components/review-system"
 import { OrderTracking } from "./components/order-tracking"
 import { LanguageSelector } from "./components/language-selector"
+import { LoginPage } from "./components/admin/LoginPage"
+import { PosPage } from "./components/staff/PosPage"
 import { LanguageProvider, useLanguage } from "./hooks/use-language"
 import { useCart } from "./hooks/use-cart"
+import type { User } from "./types"
 
-type Page = "menu" | "dashboard" | "integrations" | "inventory" | "reservations" | "reviews" | "tracking"
+type Page = "menu" | "dashboard" | "integrations" | "inventory" | "reservations" | "reviews" | "tracking" | "login" | "pos"
 
 function RestaurantAppContent() {
   const [currentPage, setCurrentPage] = useState<Page>("menu")
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
   const { cartItems, addToCart, updateQuantity, removeFromCart, getTotalItems, getTotalPrice, clearCart } = useCart()
   const { t } = useLanguage()
+
+  // Load user from localStorage on mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem("restaurant-user")
+    if (savedUser) {
+      setUser(JSON.parse(savedUser))
+    }
+  }, [])
+
+  // Save user to localStorage when it changes
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("restaurant-user", JSON.stringify(user))
+    } else {
+      localStorage.removeItem("restaurant-user")
+    }
+  }, [user])
 
   // Simple routing based on URL hash
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1) as Page
-      if (["dashboard", "integrations", "inventory", "reservations", "reviews", "tracking"].includes(hash)) {
+      if (["dashboard", "integrations", "inventory", "reservations", "reviews", "tracking", "login", "pos"].includes(hash)) {
         setCurrentPage(hash)
       } else {
         setCurrentPage("menu")
@@ -42,7 +63,23 @@ function RestaurantAppContent() {
     setCurrentPage(page)
   }
 
+  const handleLogin = (loggedInUser: User) => {
+    setUser(loggedInUser)
+    navigateTo("dashboard")
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+    navigateTo("menu")
+  }
+
   const renderCurrentPage = () => {
+    // Check if user needs to be logged in for admin pages
+    const adminPages = ["dashboard", "integrations", "inventory", "pos"]
+    if (adminPages.includes(currentPage) && !user) {
+      return <LoginPage language="en" onLogin={handleLogin} />
+    }
+
     switch (currentPage) {
       case "menu":
         return (
@@ -65,6 +102,10 @@ function RestaurantAppContent() {
         return <ReviewSystem />
       case "tracking":
         return <OrderTracking />
+      case "pos":
+        return <PosPage />
+      case "login":
+        return <LoginPage language="en" onLogin={handleLogin} />
       default:
         return (
           <MenuPage
@@ -89,6 +130,7 @@ function RestaurantAppContent() {
                 {[
                   { key: "menu", label: t("menu") },
                   { key: "dashboard", label: t("dashboard") },
+                  { key: "pos", label: t("pos") },
                   { key: "tracking", label: t("tracking") },
                   { key: "reservations", label: t("reservations") },
                   { key: "reviews", label: t("reviews") },
@@ -107,7 +149,27 @@ function RestaurantAppContent() {
                 ))}
               </div>
             </div>
-            <LanguageSelector />
+            <div className="flex items-center gap-4">
+              <LanguageSelector />
+              {user ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">Welcome, {user.name}</span>
+                  <button
+                    onClick={handleLogout}
+                    className="px-3 py-1 rounded-md text-sm font-medium text-gray-600 hover:text-gray-900"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => navigateTo("login")}
+                  className="px-3 py-1 rounded-md text-sm font-medium bg-orange-600 text-white hover:bg-orange-700"
+                >
+                  Login
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </nav>

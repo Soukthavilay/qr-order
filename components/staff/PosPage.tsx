@@ -8,15 +8,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { mockOrders } from "../../data/mockData" // Using mockData for orders
 import type { Order } from "../../types"
-import { useTranslation } from "../../hooks/useTranslation"
-import type { Language } from "../../types"
+import { useLanguage } from "../../hooks/use-language"
 
-interface PosPageProps {
-  language: Language
-}
-
-export function PosPage({ language }: PosPageProps) {
-  const { t } = useTranslation(language)
+export function PosPage() {
+  const { t } = useLanguage()
   const [tableNumberInput, setTableNumberInput] = useState("")
   const [foundOrder, setFoundOrder] = useState<Order | null>(null)
   const [searchError, setSearchError] = useState<string | null>(null)
@@ -149,7 +144,7 @@ export function PosPage({ language }: PosPageProps) {
                 <p className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                   <QrCode className="h-5 w-5" /> Scan to Pay
                 </p>
-                <Badge variant="info" className="mt-2">
+                <Badge variant="secondary" className="mt-2">
                   Mobile Payment
                 </Badge>
               </div>

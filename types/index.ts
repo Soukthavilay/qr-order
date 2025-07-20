@@ -80,8 +80,10 @@ export type OrderStatus = "received" | "in_kitchen" | "ready" | "served"
 export type ReservationStatus = "pending" | "confirmed" | "cancelled" | "completed"
 export type DietaryTag = "vegan" | "vegetarian" | "gluten_free" | "dairy_free" | "nut_free" | "halal"
 export type UserRole = "admin" | "waiter" | "kitchen" | "customer"
-export type Language = "en" | "es" | "fr" | "de"
+export type Language = "en" | "lo" | "th" | "vi"
 export type Theme = "light" | "dark"
+
+export type Translation = Record<string, Record<Language, string>>
 
 export interface AppState {
   currentPage: string

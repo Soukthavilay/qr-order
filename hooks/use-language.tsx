@@ -14,6 +14,7 @@ const translations: Translation = {
   reservations: { en: "Reservations", lo: "ການຈອງ", th: "การจอง", vi: "Đặt bàn" },
   reviews: { en: "Reviews", lo: "ການທົບທວນ", th: "รีวิว", vi: "Đánh giá" },
   tracking: { en: "Order Tracking", lo: "ຕິດຕາມຄໍາສັ່ງ", th: "ติดตามคำสั่ง", vi: "Theo dõi đơn hàng" },
+  pos: { en: "POS", lo: "ຈຸດຂາຍ", th: "จุดขาย", vi: "Điểm bán hàng" },
 
   // Menu
   ourMenu: { en: "Our Menu", lo: "ເມນູຂອງພວກເຮົາ", th: "เมนูของเรา", vi: "Thực đơn của chúng tôi" },

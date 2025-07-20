@@ -3,9 +3,9 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { useTranslation } from "../../hooks/useTranslation"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { useLanguage } from "../../hooks/use-language"
 import { mockUsers } from "../../data/mockData"
 import type { Language, User } from "../../types"
 
@@ -15,7 +15,7 @@ interface LoginPageProps {
 }
 
 export function LoginPage({ language, onLogin }: LoginPageProps) {
-  const { t } = useTranslation(language)
+  const { t } = useLanguage()
   const [credentials, setCredentials] = useState({ username: "", password: "" })
   const [error, setError] = useState("")
 
