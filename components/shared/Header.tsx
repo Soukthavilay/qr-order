@@ -25,7 +25,7 @@ export function Header({
   onThemeChange,
   onLogout,
 }: HeaderProps) {
-  const { t } = useTranslation(language)
+  const { t } = useTranslation(language) // test commit 
 
   const languages: { code: Language; name: string; flag: string }[] = [
     { code: "en", name: "English", flag: "🇺🇸" },
