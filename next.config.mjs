@@ -9,6 +9,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  output: 'export',
+  basePath: '/qr-order',
+  assetPrefix: '/qr-order',
+  trailingSlash: true,
 }
 
 export default nextConfig
