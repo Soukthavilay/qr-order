@@ -19,7 +19,7 @@ const translations: Translation = {
   kitchen: { en: "Kitchen", lo: "ຫ້ອງຄົວ", th: "ห้องครัว", vi: "Nhà bếp" },
 
   // Menu
-  ourMenu: { en: "Our Menu", lo: "ເມນູຂອງພວກເຮົາ", th: "เมนูของเรา", vi: "Thực đơn của chúng tôi" },
+  ourMenu: { en: "Menu", lo: "ເມນູຂອງພວກເຮົາ", th: "เมนูของเรา", vi: "Thực đơn của chúng tôi" },
   table: { en: "Table", lo: "ໂຕະ", th: "โต๊ะ", vi: "Bàn" },
   cart: { en: "Cart", lo: "ກະຕ່າ", th: "ตะกร้า", vi: "Giỏ hàng" },
   add: { en: "Add", lo: "ເພີ່ມ", th: "เพิ่ม", vi: "Thêm" },

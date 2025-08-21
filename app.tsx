@@ -18,6 +18,8 @@ import { CartPage } from "./components/customer/CartPage"
 import { LanguageProvider, useLanguage } from "./hooks/use-language"
 import { useCart } from "./hooks/use-cart"
 import type { User, CartItem } from "./types"
+import { Zoom, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Import Order type from types
 import type { Order } from "./types"
@@ -115,7 +117,18 @@ function RestaurantAppContent() {
     setOrders(prev => [newOrder, ...prev])
     clearCart()
     setIsCartOpen(false)
-    alert(`Order placed successfully! 🎉\nOrder ID: ${newOrder.id}\nTable: ${newOrder.tableNumber}`)
+    toast.success(
+      `✅ Order placed successfully! 🎉\nOrder ID: ${newOrder.id}\nTable: ${newOrder.tableNumber}`,
+      { position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Zoom, }
+    )
   }
 
   const handleUpdateOrderStatus = (orderId: string, newStatus: Order["status"]) => {
@@ -193,7 +206,7 @@ function RestaurantAppContent() {
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <h1 className="text-xl font-bold text-gray-900">🍜 Nom Nom Cafe</h1>
+              <h1 className="text-xl font-bold text-gray-900">🍜 Zaep</h1>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Table:</span>
                 <input
@@ -269,6 +282,19 @@ function RestaurantAppContent() {
         onClearCart={clearCart}
         onPlaceOrder={handlePlaceOrder}
       />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Zoom}
+        />
 
       {/* Mobile Navigation */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg">
