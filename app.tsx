@@ -302,7 +302,7 @@ function RestaurantAppContent() {
         <div className="grid grid-cols-4 text-xs">
           {[
             { key: "menu", label: t("menu"), icon: "🍽️" },
-            { key: "dashboard", label: t("dashboard"), icon: "📊" },
+            { key: "reviews", label: t("reviews"), icon: "📊" },
             { key: "tracking", label: t("tracking"), icon: "🚀" },
             { key: "reservations", label: t("reservations"), icon: "📅" },
           ].map(({ key, label, icon }) => (
