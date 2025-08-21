@@ -57,6 +57,13 @@ function RestaurantAppContent() {
     }
   }, [])
 
+  // get table number
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const table = params.get("table")
+    if (table) setTableNumber(table)
+  }, [])
+
   // Save user to localStorage when it changes
   useEffect(() => {
     if (user) {
@@ -209,13 +216,7 @@ function RestaurantAppContent() {
               <h1 className="text-xl font-bold text-gray-900">🍜 Zaep</h1>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Table:</span>
-                <input
-                  type="number"
-                  value={tableNumber}
-                  onChange={(e) => setTableNumber(e.target.value)}
-                  className="w-16 px-2 py-1 text-sm border border-gray-300 rounded"
-                  min="1"
-                />
+                <span className="font-semibold text-gray-900">{tableNumber}</span>
               </div>
               <div className="hidden lg:flex gap-2">
                 {[
